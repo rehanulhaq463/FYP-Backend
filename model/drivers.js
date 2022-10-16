@@ -21,6 +21,7 @@ const userschema = new mongoose.Schema({
   CnicNo: {
     type: String,
     required: true,
+    unique: true,
   },
   VehicleNo: {
     type: String,
@@ -36,33 +37,38 @@ const userschema = new mongoose.Schema({
   },
   Trips: [
     {
-      provider_email: {
+      TripId: {
         type: String,
+        required: true,
       },
-      user_email: {
+      TripIntiator: {
         type: String,
+        required: true,
       },
-      date: {
+      TripLocation: {
+        type: String,
+        required: true,
+      },
+      TripLoad: {
+        type: String,
+        required: true,
+      },
+      StartDate: {
         type: Date,
-      },  
-      userstatus: {
-        type: String,
-        default: "pending",
+        required: true,
       },
-      providerstatus: {
-        type: String,
-        default: "pending",
+      EndDate: {
+        type: Date,
+        required: true,
       },
-      totalbill: {
-        type: Number,
-        default: 0,
-      },
-      instruction: {
+      Status: {
         type: String,
+        default: "Not Assigned",
+        required: true,
       },
     },
   ],
 });
 
-const User = mongoose.model("USER", userschema);
-module.exports = User;
+const driver = mongoose.model("Drivers", userschema);
+module.exports = driver;

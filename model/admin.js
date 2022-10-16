@@ -51,8 +51,8 @@ const serviceproviderscehma = new mongoose.Schema({
 });
 
 serviceproviderscehma.pre("save", async function (next) {
-  if (this.isModified("password")) {
-    this.password = await bcrypt.hash(this.password, 12);
+  if (this.isModified("Password")) {
+    this.Password = await bcrypt.hash(this.Password, 12);
   }
   next();
 });
@@ -66,8 +66,8 @@ serviceproviderscehma.methods.generateAuthToken = async function () {
     console.log(err);
   }
 };
-const serviceprovider = mongoose.model(
-  "SERVICEPROVIDER",
+const admin = mongoose.model(
+  "Admin",
   serviceproviderscehma
 );
-module.exports = serviceprovider;
+module.exports = admin;

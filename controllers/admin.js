@@ -1,10 +1,10 @@
-const admin = require("../../model/admin");
+const admin = require("../model/admin");
 const express = require("express");
-const db = require("../../db/conn");
+const db = require("../db/conn");
 const bcrypt = require("bcrypt");
 const jtoken = require("jsonwebtoken");
-const drivers = require("../../model/admin");
-const signup = async (req, res) => {
+const drivers = require("../model/drivers");
+exports.signup = async (req, res,next) => {
     const {
         EmployeeID, FirstName, LastName,
         PhoneNo, Email, Password
@@ -21,7 +21,7 @@ const signup = async (req, res) => {
     try {
         const admcheck = await admin.findOne({ EmployeeID: EmployeeID });
         
-        if (adm) {
+        if (admcheck) {
             return res.status(422).json({ Error: "Email already exists" });
         }
         const nuser = new admin({
@@ -30,7 +30,7 @@ const signup = async (req, res) => {
         });
         const registered = await nuser.save();
         if (registered) {
-            return res.status(201).json({ message: EmployeeID + " user created" });
+            return res.status(201).json({ message: EmployeeID + " " + Email + " user created" });
         }
         else {
             return res
@@ -44,21 +44,21 @@ const signup = async (req, res) => {
         response.status(500).json({ Error: error.message });
     }
 }
-const login= async (req, res) => {
-    const { EmployeeID, password } = req.body;
-    if (!EmployeeID || !password) {
+exports.login= async (req, res,next) => {
+    const { EmployeeID, Password } = req.body;
+    if (!EmployeeID || !Password) {
         return res.status(400).json({
-            Error: "invalid credentials",
+            Error: "Empty Credentials",
         });
     }
     try {
         let token;
-        const admdoc = await admin.findOne({ EmployeeID: EmployeeID });
+        const admdoc = await admin.findOne({ EmployeeID: req.body.EmployeeID });
         if (admdoc) {
-            const passcheck = await bcrypt.compare(password, admdoc.password);
+            const passcheck = await bcrypt.compare(req.body.Password, admdoc.Password);
             token = await admdoc.generateAuthToken();
             res.cookie("jwttoken", token, {
-                expires: new Date(Date.now() + 300000),
+                expires: new Date(Date.now() + 2592000000),
                 httpOnly: true,
             });
 
@@ -67,13 +67,11 @@ const login= async (req, res) => {
                     Error: "Invalid credential",
                 });
             } else {
-                await res.send({ Message: "login successfully", EmployeeID: EmployeeID, role_id: admdoc.role_id, tokens: token });
-                console.log({ EmployeeID: EmployeeID, tokens: token });
+                 res.status(202).send({ Status: "login successfully", EmployeeID: EmployeeID, tokens: token });
+                
             }
         }
     } catch (err) {
-        res.status(500).json({ Error: "Error occurred" });
+        res.status(500).json({ Error: err.message });
     }
 }
-module.exports.signup = signup;
-module.exports.login = login;

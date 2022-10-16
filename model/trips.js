@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const servicesschema = new mongoose.Schema({
-  TripIntiator:{
+  TripId: {
+    type: String,
+    required: true,
+  },
+  TripIntiator: {
     type: String,
     required: true
   },
@@ -11,7 +15,7 @@ const servicesschema = new mongoose.Schema({
     required: true
   },
   TripLoad: {
-    type: Number,
+    type: String,
     required: true
   },
   StartDate: {
@@ -25,8 +29,9 @@ const servicesschema = new mongoose.Schema({
   Status: {
     type: String,
     default:"Not Assigned",
-    required: true
+    required: true,
+    enum:["Not Assigned", "Started", "Completed"]
   }
 });
-const admin = mongoose.model("ADMIN", servicesschema);
-module.exports = admin;
+const trip = mongoose.model("Trips", servicesschema);
+module.exports = trip;

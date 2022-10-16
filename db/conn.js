@@ -1,3 +1,5 @@
+const env = require('dotenv');
+env.config({ path: "config.env" });
 const mongoose = require("mongoose");
 const DB = process.env.DATABASE;
 
@@ -10,5 +12,5 @@ mongoose
     console.log("connection successful");
   })
   .catch((err) => {
-    console.log("connection not successful");
+    console.log("connection not successful " + err);
   });
