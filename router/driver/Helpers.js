@@ -10,5 +10,5 @@ router.post("/insertdriver", driverController.insertdriver);
 router.get("/viewdrivers", driverController.viewall);
 router.get("/finddrivers", driverController.finddriver)
 router.patch("/assigntrip", driverController.assigntrip);
-
+router.patch("/updatetrips", driverController.updatetrip);
 module.exports=router
