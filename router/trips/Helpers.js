@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.post("/createtrip", tripController.createtrip);
 
-router.get("/viewtrips", tripController.viewtrips)
-
+router.get("/viewtrips", tripController.viewtrips);
+router.patch("/updatetripstatus", tripController.updatetripstatus);
 module.exports=router
